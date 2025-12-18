@@ -1,0 +1,27 @@
+import mongoose from "mongoose";
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'User name is required'], 
+        trim: true,
+        minLength: [2, 'Name must be at least 2 characters long'],
+        maxLength: [50, 'Name must be at most 50 characters long']
+    },
+    email: {
+        type: String,
+        required: [true, 'Email is required'],
+        unique: true,
+        lowercase: true,
+        trim: true,
+        minLength: [5, 'Email must be at least 5 characters long'],
+        maxLength: [100, 'Email must be at most 100 characters long'],
+        match: [/\S+@\S+\.\S+/, 'Please fill a valid email address']
+    },
+    age: {
+        type: Number,
+        required: [true, 'Age is required']
+    },
+})
+
+export default mongoose.model('User', userSchema);
