@@ -1,27 +1,55 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema({
+const subscriptionSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'User name is required'], 
+        required: [true, 'Subscription name is required'],
         trim: true,
-        minLength: [2, 'Name must be at least 2 characters long'],
-        maxLength: [50, 'Name must be at most 50 characters long']
+        minLength: [2, 'Subscription name must be at least 2 characters long'],
+        maxLength: [100, 'Subscription name must be at most 100 characters long']
     },
-    email: {
-        type: String,
-        required: [true, 'Email is required'],
-        unique: true,
-        lowercase: true,
-        trim: true,
-        minLength: [5, 'Email must be at least 5 characters long'],
-        maxLength: [100, 'Email must be at most 100 characters long'],
-        match: [/\S+@\S+\.\S+/, 'Please fill a valid email address']
-    },
-    age: {
+    price: {
         type: Number,
-        required: [true, 'Age is required']
+        required: [true, 'Subscription price is required'],
+        min: [0, 'Subscription price must be at least 0']
     },
-})
+    currency: {
+        type: String,
+        enum: ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'AUD', 'CAD'],
+        default: 'USD'
+    },
+    frequency: {
+        type: String,
+        enum: ['daily', 'weekly', 'monthly', 'yearly'],
+    },
+    category: {
+        type: String,
+        enum: ['entertainment', 'news', 'sports', 'lifestyle', 'tech', 'finance', 'education', 'politics', 'other'],
+        required: [true, 'Subscription category is required']
+    },
+    paymentMethod: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    status: {
+        type: String,
+        enum: ['active', 'inactive', 'canceled', 'expired'],
+        default: 'active'
+    },
+    startDate: {
+        type: Date,
+        required: [true, 'Subscription start date is required'],
+        validate: {
+            validator: function(value) {
+                if (!value) return false;
+                return value <= new Date();
+            },
+            message: 'Start date cannot be in the future'
+        },
+    },
+}, {
+    timestamps: true
+});
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model('Subscription', subscriptionSchema);
