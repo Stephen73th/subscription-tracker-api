@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+// import { createSubscription } from '../controllers/subscription.controller.js';
 
 const subscriptionSchema = new mongoose.Schema({
     name: {
@@ -92,4 +93,5 @@ subscriptionSchema.pre('save', function(next) {
 });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema)
+
 export default Subscription;
